@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - test
     tags-ignore:
       - '**'
 
@@ -42,15 +43,6 @@ jobs:
       - name: "Download NPM packages"
         working-directory: ./buildtools
         run: npm ci
-
-      - name: "Check environmental variables"
-        working-directory: ./buildtools
-        run: npx gulp check
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CURSEFORGE_PROJECT_ID: ${{ secrets.CURSEFORGE_PROJECT_ID }}
-          CURSEFORGE_API_TOKEN: ${{ secrets.CURSEFORGE_API_TOKEN }}
-          CFCORE_API_TOKEN: ${{ secrets.CFCORE_API_TOKEN }}
 
       - name: "Build everything"
         working-directory: ./buildtools
@@ -105,10 +97,3 @@ jobs:
             build/shared/CHANGELOG.md
           if-no-files-found: error
           compression-level: 9
-
-      - name: "Fire Discord webhook"
-        working-directory: ./buildtools
-        run: npx gulp fireNightlyWebhook
-        env:
-          GITHUB_RUN_ID: ${{ github.run_id }}
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
